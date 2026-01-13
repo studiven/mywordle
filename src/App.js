@@ -4,61 +4,52 @@ import { useState, useEffect } from 'react';
 import { checkGuess } from './logic/gameLogic';
 
 function App() {
-  const maxWordLenght = 5; 
+  const maxWordLength = 5; 
 
   const [targetWord, setTargetWord] = useState('APFEL');
   const [guesses, setGuesses] = useState([]); // leeres Array am Start
   const [currentGuess, setCurrentGuess] = useState(''); // leerer String
 
-  const handleKeyPress = (event) => {
+  const handleKeyDown = (event) => {
     console.log('Taste gedrückt:', event.key);
     
     if (event.key === 'Enter') {
-      console.log(event.repeat); 
-      if (event.repeat) return;
+      if (currentGuess.length !== maxWordLength) return;
 
-      setCurrentGuess(prev => {
-      
-        if (prev.length !== maxWordLenght) return prev;
-        
-          setGuesses(g => [
-            ...g,
-            {
-              word: prev,
-              statuses: checkGuess(prev, targetWord)
-           }]);
-        
-        return '';
-    });
+      setGuesses(g => [
+        ...g,
+        {
+          word: currentGuess,
+          statuses: checkGuess(currentGuess, targetWord)
+        }
+      ]);
 
+      setCurrentGuess('');
+      return;
+    
 
     } else if (event.key === 'Backspace') {
 
       setCurrentGuess(prev => prev.slice(0, -1));
+      return;
 
     } else if ( /^[a-zA-Z]$/.test(event.key)) {
 
-      setCurrentGuess(prev => {
-      if (prev.length >= maxWordLenght) return prev;
-      return prev + event.key.toUpperCase();
-      });
-
+      if (currentGuess.length >= maxWordLength) return;
+      setCurrentGuess(currentGuess + event.key.toUpperCase());
+  
     }
 
     //if (guesses.length >= 6) return;
     
   };
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress);
-  
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
-
-
   return (
 
-     <div>
+     <div tabIndex={0}
+      onKeyDown={handleKeyDown}
+      style={{ outline: 'none' }}
+    > 
       <h1>Wordle</h1>
 
       <p>Target: {targetWord}</p>
