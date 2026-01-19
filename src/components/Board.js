@@ -1,9 +1,9 @@
 import Row from './Row';
 import { checkGuess } from '../logic/gameLogic';
 
-function Board({guesses}) {
+function Board({guesses , currentGuess}) {
     const TOTAL_ROWS = 6; 
-  
+    const maxWordLength = 5; 
   
     return (
     <div>
@@ -16,7 +16,16 @@ function Board({guesses}) {
 
       ))}
       
-      {Array.from({ length: TOTAL_ROWS - guesses.length }).map((_, index) => (
+       {/* Aktuelle Eingabe */}
+      {guesses.length < 6 &&(
+        <Row
+          key={`current`}
+          guess={currentGuess.padEnd(maxWordLength, ' ')}
+          statuses={['', '', '', '', '']}
+        />
+      )}
+
+      {Array.from({ length: TOTAL_ROWS - (guesses.length + 1)}).map((_, index) => (
         <Row 
           key={`empty-${index}`}
           guess="     "

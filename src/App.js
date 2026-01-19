@@ -1,30 +1,88 @@
 import './App.css';
 import Board from './components/Board';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { checkGuess } from './logic/gameLogic';
 
 function App() {
   const maxWordLength = 5; 
 
-  const [targetWord, setTargetWord] = useState('APFEL');
+  const [targetWord, setTargetWord] = useState(null);
   const [guesses, setGuesses] = useState([]); // leeres Array am Start
   const [currentGuess, setCurrentGuess] = useState(''); // leerer String
   const [gameStatus, setGameStatus] = useState('playing');// 'playing' / 'won' / 'lost'
+  const [isLoadingTarget, setIsLoadingTarget] = useState(true);
+  const didFetchTarget = useRef(false);
 
-  const resetGame = () => {
-    setTargetWord('APFEL'); // später random
+useEffect(() => {
+  if (didFetchTarget.current) return;
+  didFetchTarget.current = true;
+
+  loadValidTargetWord();
+}, []);
+
+
+
+ async function loadValidTargetWord() {
+  setIsLoadingTarget(true);
+
+  let found = false;
+
+  while (!found) {
+    try {
+      const randomRes = await fetch(
+        'https://random-word-api.herokuapp.com/word?length=5'
+      );
+      const [word] = await randomRes.json();
+
+      const dictRes = await fetch(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+      );
+      const dictData = await dictRes.json();
+
+      // dictionaryapi.dev → Array bei Erfolg
+      if (Array.isArray(dictData) && dictData.length > 0) {
+        setTargetWord(word.toUpperCase());
+        setIsLoadingTarget(false);
+        found = true; 
+      }
+
+    } catch (error) {
+      console.error('API error:', error);
+      // einfach nochmal versuchen
+    }
+  }
+}
+
+
+async function isValidDictionaryWord(word) {
+  const res = await fetch(
+    `https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`
+  );
+  const data = await res.json();
+  return Array.isArray(data) && data.length > 0;
+}
+
+
+  function resetGame() {
+    loadValidTargetWord();
     setGuesses([]);
     setCurrentGuess('');
     setGameStatus('playing');
   };
+  
 
-
-  const handleKeyDown = (event) => {
+  const handleKeyDown =  async (event) => {
     console.log('Taste gedrückt:', event.key);
-    if (gameStatus !== 'playing') return; // Input sperren
+    if (gameStatus !== 'playing') return; // block Input
 
     if (event.key === 'Enter') {
       if (currentGuess.length !== maxWordLength) return;
+
+      //check via dictionary api
+      const valid = await isValidDictionaryWord(currentGuess);
+      if (!valid) {
+        return;
+      }
 
       setGuesses(g => [
         ...g,
@@ -59,8 +117,6 @@ function App() {
       setCurrentGuess(currentGuess + event.key.toUpperCase());
   
     }
-
-    //if (guesses.length >= 6) return;
     
   };
 
@@ -91,7 +147,8 @@ function App() {
         </div>
       )}
 
-      <Board guesses={guesses}/>
+      {isLoadingTarget ? (<p>Loading...</p>) : (<Board guesses={guesses} currentGuess={currentGuess}/>)}
+    
     </div>
 
   );
