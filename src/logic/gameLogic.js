@@ -2,7 +2,7 @@
 
 export function checkGuess(guess, targetWord) {
     const result = [];
-
+   
     if (guess.length === targetWord.length) {
         for (let i = 0; i < guess.length; i++) {
                 let found = false; 
