@@ -72,13 +72,12 @@ async function isValidDictionaryWord(word) {
   
 
   const handleKeyDown =  async (event) => {
-    console.log('Taste gedrückt:', event.key);
-    if (gameStatus !== 'playing') return; // block Input
+    
+    if (gameStatus !== 'playing') return; 
 
     if (event.key === 'Enter') {
       if (currentGuess.length !== maxWordLength) return;
 
-      //check via dictionary api
       const valid = await isValidDictionaryWord(currentGuess);
       if (!valid) {
         return;

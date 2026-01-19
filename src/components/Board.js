@@ -16,7 +16,6 @@ function Board({guesses , currentGuess}) {
 
       ))}
       
-       {/* Aktuelle Eingabe */}
       {guesses.length < 6 &&(
         <Row
           key={`current`}
