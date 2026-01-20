@@ -12,8 +12,10 @@ function App() {
   const [gameStatus, setGameStatus] = useState('playing');// 'playing' / 'won' / 'lost'
   const [isLoadingTarget, setIsLoadingTarget] = useState(true);
   const didFetchTarget = useRef(false);
-
+  const inputRef = useRef(null);
+  
 useEffect(() => {
+  inputRef.current?.focus();
   if (didFetchTarget.current) return;
   didFetchTarget.current = true;
 
@@ -121,10 +123,28 @@ async function isValidDictionaryWord(word) {
 
   return (
 
-     <div tabIndex={0}
-      onKeyDown={handleKeyDown}
+     <div 
+      onClick={() => inputRef.current?.focus()}
+      //tabIndex={0}
+      //onKeyDown={handleKeyDown}
       style={{ outline: 'none' }}
-    > 
+    >
+      <input
+    ref={inputRef}
+    type="text"
+    inputMode="text"
+    autoComplete="off"
+    autoCorrect="off"
+    autoCapitalize="characters"
+    spellCheck={false}
+    style={{
+      position: 'absolute',
+      opacity: 0,
+      height: 0,
+      width: 0
+    }}
+    onKeyDown={handleKeyDown}
+  /> 
       <h1>Wordle</h1>
 
       <p>Target: {targetWord}</p>
