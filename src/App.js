@@ -3,8 +3,15 @@ import Board from './components/Board';
 import { useState, useEffect, useRef } from 'react';
 import { checkGuess } from './logic/gameLogic';
 import { supabase } from './utils/supabase';
+import TargetToggle from './components/TargetToggle';
+import Stats from './components/Stats';
+import Toast from "./components/Toast";
+import GameResultModal from './components/GameResultModal';
+import StartScreen from './components/StartScreen';
+
 
 function App() {
+
   const maxWordLength = 5; 
 
   const [stats, setStats] = useState(null);
@@ -13,31 +20,75 @@ function App() {
   const [currentGuess, setCurrentGuess] = useState(''); // leerer String
   const [gameStatus, setGameStatus] = useState('playing');// 'playing' / 'won' / 'lost'
   const [isLoadingTarget, setIsLoadingTarget] = useState(true);
-  const didFetchTarget = useRef(false);
   const inputRef = useRef(null);
+  const [feedback, setFeedback] = useState(null);
+  const [shake, setShake] = useState(false);
+  const [gameMode, setGameMode] = useState(null);
+
 
 useEffect(() => {
-  inputRef.current?.focus();
-  if (didFetchTarget.current) return;
-  didFetchTarget.current = true;
+  if (!gameMode) return;
 
-  loadValidTargetWord();
+  if (gameMode === "daily") {
+    getDailyWord().then(word => {
+      setTargetWord(word.toUpperCase());
+      setIsLoadingTarget(false);
+    });
+  }
+
+  if (gameMode === "unlimited") {
+    loadValidTargetWord();
+  }
+
   getHistory().then(setStats);
-}, []);
+  inputRef.current?.focus();
+}, [gameMode]);
 
+if (!gameMode) {
+  return <StartScreen onSelect={setGameMode} />;
+}
+
+function triggerShake() {
+  setShake(true);
+  setTimeout(() => setShake(false), 400);
+}
+
+async function getDailyWord() {
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
+  const { data } = await supabase
+    .from("daily_words")
+    .select("word")
+    .eq("date", today)
+    .single();
+
+  if (data?.word) {
+    return data.word.toUpperCase();
+  }
+
+  const word = await loadValidTargetWord();
+
+  await supabase.from("daily_words").insert({
+    date: today,
+    word: word.toUpperCase()
+  });
+
+  return word;
+}
 
 
  async function loadValidTargetWord() {
   setIsLoadingTarget(true);
 
   let found = false;
+  let word = null;
 
   while (!found) {
     try {
       const randomRes = await fetch(
         'https://random-word-api.herokuapp.com/word?length=5'
       );
-      const [word] = await randomRes.json();
+      [word] = await randomRes.json();
 
       const dictRes = await fetch(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
@@ -56,6 +107,7 @@ useEffect(() => {
       // einfach nochmal versuchen
     }
   }
+  return word; 
 }
 
 async function getHistory() {
@@ -121,6 +173,16 @@ async function isValidDictionaryWord(word) {
     setCurrentGuess('');
     setGameStatus('playing');
   };
+
+  function backToStart() {
+  setGameMode(null);
+  setTargetWord(null);
+  setGuesses([]);
+  setCurrentGuess('');
+  setGameStatus('playing');
+  setIsLoadingTarget(true);
+}
+
   
 
   const handleKeyDown =  async (event) => {
@@ -128,12 +190,20 @@ async function isValidDictionaryWord(word) {
     if (gameStatus !== 'playing') return; 
 
     if (event.key === 'Enter') {
-      if (currentGuess.length !== maxWordLength) return;
+      if (currentGuess.length !== maxWordLength) {
+        setFeedback({ type: 'error', message: 'Zu kurz!' });
+        triggerShake();
+        return;
+      }
 
       const valid = await isValidDictionaryWord(currentGuess);
       if (!valid) {
+        setFeedback({ type: 'error', message: 'Ungültiges Wort' });
+        triggerShake();
         return;
       }
+
+      setFeedback({ type: 'success', message: '✓ Wort akzeptiert' });
 
       setGuesses(g => [
         ...g,
@@ -145,12 +215,17 @@ async function isValidDictionaryWord(word) {
 
       setCurrentGuess('');
 
-      if (currentGuess === targetWord) {
+      if (currentGuess.toUpperCase() === targetWord.toUpperCase()) {
+
         setGameStatus('won');
 
         await supabase.from("games").insert({
           guesses: guesses.length + 1
         });
+
+        const updatedStats = await getHistory();
+        setStats(updatedStats);
+
         return;
       }
 
@@ -160,6 +235,10 @@ async function isValidDictionaryWord(word) {
         await supabase.from("games").insert({
           guesses: 7
         });
+
+        const updatedStats = await getHistory();
+        setStats(updatedStats);
+
         return;
       }  
 
@@ -179,75 +258,60 @@ async function isValidDictionaryWord(word) {
     
   };
 
-  return (
+return (
+  
+  <div className="app-root" onClick={() => inputRef.current?.focus()}>
+    <input
+      ref={inputRef}
+      type="text"
+      inputMode="text"
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="characters"
+      spellCheck={false}
+      className="hidden-input"
+      onKeyDown={handleKeyDown}
+    />
 
-     <div 
-      onClick={() => inputRef.current?.focus()}
-      //tabIndex={0}
-      //onKeyDown={handleKeyDown}
-      style={{ outline: 'none' }}
-    >
-      <input
-    ref={inputRef}
-    type="text"
-    inputMode="text"
-    autoComplete="off"
-    autoCorrect="off"
-    autoCapitalize="characters"
-    spellCheck={false}
-    style={{
-      position: 'absolute',
-      opacity: 0,
-      height: 0,
-      width: 0
-    }}
-    onKeyDown={handleKeyDown}
-  /> 
+    {/* LEFT: Stats */}
+    <aside className="sidebar">
+      {stats && <Stats stats={stats} />}
+    </aside>
+
+    {/* CENTER: Game */}
+    <main className="game">
+      <Toast feedback={feedback} clear={() => setFeedback(null)} />
+
+
       <h1>Wordle</h1>
 
-      <p>Target: {targetWord}</p>
-      <p>Guesses: {JSON.stringify(guesses)}</p>
-      <p>Current: {currentGuess}</p>
+      <TargetToggle targetWord={targetWord} />
 
-      {gameStatus === 'won' && (
-        <div>
-          <h2> Gewonnen!</h2>
-          <button onClick={resetGame}>Play again</button>
-        </div>
+      {isLoadingTarget ? (
+        <p>Loading...</p>
+      ) : (
+        <Board guesses={guesses} currentGuess={currentGuess} shake={shake} />
       )}
 
-      {gameStatus === 'lost' && (
-        <div>
-          <h2>Verloren!</h2>
-          <p>Das Wort war: {targetWord}</p>
-          <button onClick={resetGame}>Play again</button>
-        </div>
-      )}
+      {gameStatus !== 'playing' && (
+    <GameResultModal
+    status={gameStatus}
+    targetWord={targetWord}
+    guessesCount={guesses.length}
+    gameMode={gameMode}
+    onPlayAgain={resetGame}
+    onBackToStart={backToStart}
+    />
+    )}
 
-      {isLoadingTarget ? (<p>Loading...</p>) : (<Board guesses={guesses} currentGuess={currentGuess}/>)}
-    
-      {stats != null && (
-    <div>
-      <h2>Statistiken</h2>
 
-      <p>Ø letzte 5 Spiele: {stats.avgLast5.toFixed(2)}</p>
-      <p>Ø insgesamt: {stats.overallAvg.toFixed(2)}</p>
-      <p>Verlorene Spiele: {stats.lostGames}</p>
+    </main>
 
-      <h3>Verteilung</h3>
-      <ul>
-        {[1,2,3,4,5,6].map(n => (
-          <li key={n}>
-            {n} Guesses: {stats.distribution[n] || 0}
-          </li>
-        ))}
-      </ul>
-    </div>
-      )}
-    
-    </div>
+    {/* RIGHT spacer */}
+    <div />
+  </div>
+);
 
-  );
 }
 
 export default App;

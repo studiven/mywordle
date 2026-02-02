@@ -36,3 +36,137 @@
     transform: rotate(360deg);
   }
 }
+
+.app-root {
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  min-height: 100vh;
+  background: #121213;
+  color: white;
+}
+
+.sidebar {
+  padding: 20px;
+  border-right: 1px solid #333;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden-input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.game-over {
+  margin-top: 20px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .app-root {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    order: 2;
+    border-right: none;
+    border-top: 1px solid #333;
+  }
+
+  .game {
+    order: 1;
+  }
+}
+.toast {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+  z-index: 2000;
+  animation: slideDown 0.25s ease-out;
+}
+
+.toast.success {
+  background: #3a7;
+}
+
+.toast.error {
+  background: #a33;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.row {
+  display: flex;
+}
+
+.row.shake {
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+  100% { transform: translateX(0); }
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #1e1e1e;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  min-width: 280px;
+}
+
+.modal button {
+  margin-top: 16px;
+  padding: 8px 16px;
+}
+.start-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.start-screen button {
+  padding: 12px 24px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}

@@ -1,7 +1,7 @@
 import Row from './Row';
 import { checkGuess } from '../logic/gameLogic';
 
-function Board({guesses , currentGuess}) {
+function Board({guesses , currentGuess, shake}) {
     const TOTAL_ROWS = 6; 
     const maxWordLength = 5; 
   
@@ -12,6 +12,7 @@ function Board({guesses , currentGuess}) {
           key={index}
           guess={guess.word}
           statuses={guess.statuses}
+          
         />
 
       ))}
@@ -21,6 +22,7 @@ function Board({guesses , currentGuess}) {
           key={`current`}
           guess={currentGuess.padEnd(maxWordLength, ' ')}
           statuses={['', '', '', '', '']}
+          shake={shake}
         />
       )}
 

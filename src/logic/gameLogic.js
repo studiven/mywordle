@@ -1,6 +1,8 @@
 
 
 export function checkGuess(guess, targetWord) {
+    guess = guess.toUpperCase();
+    targetWord = targetWord.toUpperCase();
     const result = [];
    
     if (guess.length === targetWord.length) {

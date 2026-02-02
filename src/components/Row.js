@@ -1,11 +1,10 @@
 import Tile from './Tile.js';
 
-function Row({ guess, statuses}) {
-
+function Row({ guess, statuses, shake }) {
   return (
-    <div style={{ display: 'flex' }}>
+    <div className={`row ${shake ? "shake" : ""}`}>
       {guess.split('').map((letter, index) => (
-        <Tile 
+        <Tile
           key={index}
           letter={letter}
           status={statuses[index]}
@@ -14,5 +13,6 @@ function Row({ guess, statuses}) {
     </div>
   );
 }
+
 
 export default Row;
