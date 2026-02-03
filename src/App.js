@@ -262,18 +262,7 @@ function App() {
   return (
 
     <div className="app-root" onClick={() => inputRef.current?.focus()}>
-      <input
-        ref={inputRef}
-        type="text"
-        inputMode="text"
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="characters"
-        spellCheck={false}
-        className="hidden-input"
-        onKeyDown={handleKeyDown}
-      />
-
+      
       {statsOpen && (
         <div
           className="sidebar-backdrop"
@@ -299,6 +288,18 @@ function App() {
         <h1>Wordle</h1>
 
         <TargetToggle targetWord={targetWord} />
+
+        <input
+        ref={inputRef}
+        type="text"
+        inputMode="text"
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="characters"
+        spellCheck={false}
+        className="hidden-input"
+        onKeyDown={handleKeyDown}
+      />
 
         {isLoadingTarget ? (
           <p>Loading...</p>
