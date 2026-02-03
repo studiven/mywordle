@@ -1,74 +1,355 @@
-.App {
+/* =========================
+   THEME
+========================= */
+:root {
+  --bg: #121213;
+  --panel: #1e1e1e;
+  --border: #333;
+
+  --tile-empty: #3a3a3c;
+  --tile-absent: #3a3a3c;
+  --tile-present: #b59f3b;
+  --tile-correct: #538d4e;
+
+  --success: #538d4e;
+  --error: #b91c1c;
+
+  --text: #ffffff;
+  --muted: #a1a1aa;
+}
+
+/* =========================
+   BASE
+========================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* =========================
+   APP LAYOUT
+========================= */
+.app-root {
+  position: relative;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.top-left {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1100;
+}
+
+/* =========================
+   SIDEBAR (STATS)
+========================= */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100vh;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  padding: 20px;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar-handle {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1200;
+
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 900;
+}
+
+.stats-content {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stats-button {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 18px;
+  z-index: 1100;
+}
+
+
+.distribution {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.bar {
+  background: #2a2a2a;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 28px;
+}
+
+.bar-fill {
+  background: var(--success);
+  height: 100%;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  transition: filter 0.2s;
+}
+
+.bar-fill:hover {
+  filter: brightness(1.2);
+}
+
+.averages {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.avg-card {
+  background: #1f1f1f;
+  border-radius: 14px;
+  padding: 16px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.avg-card span {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.avg-card strong {
+  font-size: 28px;
+  font-weight: 800;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.app-root {
-  display: grid;
-  grid-template-columns: 260px 1fr 260px;
-  min-height: 100vh;
-  background: #121213;
-  color: white;
-}
-
-.sidebar {
-  padding: 20px;
-  border-right: 1px solid #333;
-}
-
+/* =========================
+   GAME AREA
+========================= */
 .game {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 16px;
 }
 
+
+/* =========================
+   HIDDEN INPUT (MOBILE KB)
+========================= */
 .hidden-input {
   position: absolute;
   opacity: 0;
+  pointer-events: none;
   height: 0;
   width: 0;
 }
 
-.game-over {
-  margin-top: 20px;
-  text-align: center;
+/* =========================
+   BOARD / ROWS
+========================= */
+.row {
+  display: flex;
+  gap: 6px;
 }
 
+.row.shake {
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-6px);
+  }
+
+  40% {
+    transform: translateX(6px);
+  }
+
+  60% {
+    transform: translateX(-6px);
+  }
+
+  80% {
+    transform: translateX(6px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* =========================
+   TOAST FEEDBACK
+========================= */
+.toast {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: white;
+  z-index: 2000;
+  animation: slideDown 0.25s ease-out;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.toast.success {
+  background: var(--success);
+}
+
+.toast.error {
+  background: var(--error);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* =========================
+   MODAL (WIN / LOSS)
+========================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--panel);
+  padding: 24px;
+  border-radius: 14px;
+  text-align: center;
+  min-width: 300px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.modal h2 {
+  margin-bottom: 8px;
+}
+
+.modal p {
+  color: var(--muted);
+}
+
+.modal button {
+  margin-top: 16px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* =========================
+   START SCREEN (LIGHT)
+========================= */
+.start-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: #111;
+}
+
+.start-screen h1 {
+  font-size: 36px;
+  letter-spacing: 2px;
+}
+
+.start-screen button {
+  padding: 14px 32px;
+  font-size: 18px;
+  border-radius: 12px;
+  border: 2px solid #111;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.start-screen button:hover {
+  background: #111;
+  color: #fff;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
 @media (max-width: 768px) {
   .app-root {
     grid-template-columns: 1fr;
@@ -77,96 +358,55 @@
   .sidebar {
     order: 2;
     border-right: none;
-    border-top: 1px solid #333;
+    border-top: 1px solid var(--border);
   }
 
   .game {
     order: 1;
+    padding: 16px;
   }
 }
-.toast {
+
+/* =========================
+   Debug toggle
+========================= */
+
+.target-toggle {
   position: fixed;
   top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: bold;
-  color: white;
-  z-index: 2000;
-  animation: slideDown 0.25s ease-out;
+  right: 16px;
+  z-index: 1100;
 }
 
-.toast.success {
-  background: #3a7;
-}
-
-.toast.error {
-  background: #a33;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -10px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
-}
-
-.row {
-  display: flex;
-}
-
-.row.shake {
-  animation: shake 0.4s;
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-6px); }
-  80% { transform: translateX(6px); }
-  100% { transform: translateX(0); }
-}
-.modal-backdrop {
+.target-toggle-btn {
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
+  top: 16px;
+  right: 16px;
+  z-index: 1200;
 
-.modal {
-  background: #1e1e1e;
-  padding: 24px;
-  border-radius: 12px;
-  text-align: center;
-  min-width: 280px;
-}
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 
-.modal button {
-  margin-top: 16px;
-  padding: 8px 16px;
-}
-.start-screen {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: center;
-  justify-content: center;
-}
+  padding: 10px 14px;
+  min-width: 48px;
 
-.start-screen button {
-  padding: 12px 24px;
-  font-size: 18px;
-  border-radius: 8px;
-  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--text);
+
   cursor: pointer;
+}
+
+
+.target-toggle-word {
+  margin-top: 6px;
+  padding: 6px 10px;
+  background: #000;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--muted);
 }

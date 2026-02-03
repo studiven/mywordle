@@ -1,19 +1,43 @@
 export default function Stats({ stats }) {
-  return (
-    <>
-      <h2>Statistiken</h2>
-      <p>Ø letzte 5: {stats.avgLast5.toFixed(2)}</p>
-      <p>Ø gesamt: {stats.overallAvg.toFixed(2)}</p>
-      <p>Verloren: {stats.lostGames}</p>
+    return (
+        <div className="stats">
+            <h2>Statistik</h2>
 
-      <h3>Verteilung</h3>
-      <ul>
-        {[1,2,3,4,5,6].map(n => (
-          <li key={n}>
-            {n}: {stats.distribution[n] || 0}
-          </li>
-        ))}
-      </ul>
-    </>
-  );
+            <div className="averages">
+                <div className="avg-card">
+                    <span>Ø letzte 5 Spiele</span>
+                    <strong>{stats.avgLast5.toFixed(2)}</strong>
+                </div>
+
+                <div className="avg-card">
+                    <span>Ø gesamt</span>
+                    <strong>{stats.overallAvg.toFixed(2)}</strong>
+                </div>
+
+                <div className="avg-card">
+                    <span>Verlorene Spiele</span>
+                    <strong>{stats.lostGames}</strong>
+                </div>
+            </div>
+
+
+            <div className="distribution">
+                <span>Verteilung </span>
+
+                {Object.entries(stats.distribution).map(([guess, count]) => (
+                    <div key={guess} className="bar-row">
+                        <span>{guess}</span>
+                        <div className="bar">
+                            <div
+                                className="bar-fill"
+                                style={{ width: `${count * 24}px` }}
+                            >
+                                {count}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 }
