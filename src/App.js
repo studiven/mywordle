@@ -83,20 +83,21 @@ function App() {
 
     let found = false;
     let word = null;
-    let retries = 1; 
+    let retries = 5; 
     let currentTries = 0; 
 
     while (!found && currentTries < retries) {
       try {
         const randomRes = await fetch(
-          'https://random-word-api.herokuapp.com/word?length=5&diff=1'
+          'https://random-words-api.kushcreates.com/api?language=en&category=wordle&length=5&type=uppercase&words=1'
         );
 
         if (!randomRes.ok) {
           throw new Error(`API Fehler: ${randomRes.status}`);
         }
 
-        [word] = await randomRes.json();
+        const [result] = await randomRes.json();
+        word = result.word;
 
         const dictRes = await fetch(
           `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
