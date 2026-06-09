@@ -83,43 +83,65 @@ function App() {
 
     let found = false;
     let word = null;
+    let retries = 1; 
+    let currentTries = 0; 
 
-    while (!found) {
+    while (!found && currentTries < retries) {
       try {
         const randomRes = await fetch(
-          'https://random-word-api.herokuapp.com/word?length=5'
+          'https://random-word-api.herokuapp.com/word?length=5&diff=1'
         );
+
+        if (!randomRes.ok) {
+          throw new Error(`API Fehler: ${randomRes.status}`);
+        }
+
         [word] = await randomRes.json();
 
         const dictRes = await fetch(
           `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
         );
+
+        if (!dictRes.ok) {
+          throw new Error(`API Fehler: ${dictRes.status}`);
+        }
         const dictData = await dictRes.json();
 
         // dictionaryapi.dev → Array bei Erfolg
         if (Array.isArray(dictData) && dictData.length > 0) {
-          setTargetWord(word.toUpperCase());
-          setIsLoadingTarget(false);
           found = true;
         }
 
       } catch (error) {
         console.error('API error:', error);
         // einfach nochmal versuchen
+      } finally {
+        console.error("THIS IS A INF0: ", currentTries); 
+        currentTries++; 
       }
     }
+    if (word === null) {
+      //Fallback
+        word = "APPLE"; 
+    }
+
+      setTargetWord(word.toUpperCase());
+      setIsLoadingTarget(false);
+
     return word;
   }
 
   async function getHistory() {
 
     // last 5 games
-    const { data: last5 = [] } = await supabase
+    const { data: last5Raw = [] } = await supabase
       .from("games")
       .select("guesses")
       .neq("guesses", 7)
       .order("created_at", { ascending: false })
       .limit(5);
+
+    const last5 = last5Raw ?? [];
 
     const avgLast5 =
       last5.length > 0
@@ -127,11 +149,13 @@ function App() {
         : 0;
 
     // overall
-    const { data: allWins = [] } = await supabase
+    const { data: allWinsRaw = [] } = await supabase
       .from("games")
       .select("guesses")
       .neq("guesses", 7);
 
+    const allWins = allWinsRaw ?? [];
+    
     const overallAvg =
       allWins.length > 0
         ? allWins.reduce((sum, g) => sum + g.guesses, 0) / allWins.length
@@ -147,7 +171,7 @@ function App() {
     const { count: lostGames = 0 } = await supabase
       .from("games")
       .select("*", { count: "exact", head: true })
-      .eq("guesses", 7);
+      .eq("guesses", 7) ?? [];
 
     return {
       avgLast5,
