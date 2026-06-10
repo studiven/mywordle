@@ -8,6 +8,7 @@ import Stats from './components/Stats';
 import Toast from "./components/Toast";
 import GameResultModal from './components/GameResultModal';
 import StartScreen from './components/StartScreen';
+import Keyboard from './components/Keyboard';
 
 
 function App() {
@@ -332,6 +333,8 @@ function App() {
           <Board guesses={guesses} currentGuess={currentGuess} shake={shake} />
         )}
 
+        <Keyboard guesses={guesses} />
+
         {gameStatus !== 'playing' && (
           <GameResultModal
             status={gameStatus}
@@ -342,7 +345,6 @@ function App() {
             onBackToStart={backToStart}
           />
         )}
-
 
       </main>
 

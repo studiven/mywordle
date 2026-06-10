@@ -181,7 +181,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 80px;
   gap: 16px;
 }
 
@@ -410,3 +411,38 @@ body {
   letter-spacing: 3px;
   color: var(--muted);
 }
+
+/* =========================
+   KEYBOARD
+========================= */
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 6px;
+}
+
+.keyboard-key {
+  width: 38px;
+  height: 52px;
+  border-radius: 6px;
+  background: #818384;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.keyboard-key.correct  { background: var(--tile-correct); }
+.keyboard-key.present  { background: var(--tile-present); }
+.keyboard-key.absent   { background: var(--tile-absent);  }
