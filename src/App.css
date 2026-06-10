@@ -1,13 +1,12 @@
 /* =========================
    THEME
 ========================= */
-
 :root {
-  --bg: #ffffff;           
-  --panel: #f5f5f5;        
-  --border: #e0e0e0;       
-  --muted: #888888;        
-  --text: #1a1a1a;         
+  --bg: #ffffff;
+  --panel: #f5f5f5;
+  --border: #e0e0e0;
+  --muted: #888888;
+  --text: #1a1a1a;
 
   --tile-empty: #d3d6da;
   --tile-absent: #d3d6da;
@@ -16,9 +15,6 @@
 
   --success: #538d4e;
   --error: #b91c1c;
-
-  --text: #ffffff;
-  --muted: #a1a1aa;
 }
 
 /* =========================
@@ -32,24 +28,17 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* =========================
    APP LAYOUT
 ========================= */
 .app-root {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background: var(--bg);
-}
-
-.top-left {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 1100;
 }
 
 /* =========================
@@ -61,27 +50,12 @@ body {
   left: -280px;
   width: 280px;
   height: 100vh;
-  background: var(--panel);
-  border-right: 1px solid var(--border);
+  background: #f9f9f9;
+  border-right: 1px solid #e0e0e0;
   padding: 20px;
   transition: left 0.3s ease;
   z-index: 1000;
 }
-
-.sidebar-handle {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 1200;
-
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-
-  padding: 10px 12px;
-  cursor: pointer;
-}
-
 
 .sidebar.open {
   left: 0;
@@ -90,23 +64,16 @@ body {
 .sidebar-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.25);
   z-index: 900;
-}
-
-.stats-content {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 
 .stats-button {
   position: fixed;
   top: 16px;
   left: 16px;
-  background: var(--panel);
-  border: 1px solid var(--border);
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
   border-radius: 10px;
   padding: 10px 12px;
   cursor: pointer;
@@ -114,11 +81,47 @@ body {
   z-index: 1100;
 }
 
+.stats h2 {
+  color: #1a1a1a;
+  margin-bottom: 16px;
+}
+
+.averages {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.avg-card {
+  background: #f0f0f0;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+
+.avg-card span {
+  display: block;
+  font-size: 13px;
+  color: #666666;
+  margin-bottom: 6px;
+}
+
+.avg-card strong {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
 
 .distribution {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.distribution > span {
+  color: #1a1a1a;
+  font-weight: 500;
 }
 
 .bar-row {
@@ -128,21 +131,26 @@ body {
   align-items: center;
 }
 
+.bar-row span {
+  color: #1a1a1a;
+}
+
 .bar {
-  background: #2a2a2a;
+  background: #e0e0e0;
   border-radius: 8px;
   overflow: hidden;
   height: 28px;
 }
 
 .bar-fill {
-  background: var(--success);
+  background: #6aaa64;
   height: 100%;
   padding-left: 10px;
   display: flex;
   align-items: center;
   font-size: 13px;
   font-weight: 700;
+  color: #ffffff;
   transition: filter 0.2s;
 }
 
@@ -150,48 +158,117 @@ body {
   filter: brightness(1.2);
 }
 
-.averages {
+.stats-empty {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
-
-.avg-card {
-  background: #1f1f1f;
-  border-radius: 14px;
-  padding: 16px;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 12px;
   text-align: center;
 }
 
-.avg-card span {
-  display: block;
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 6px;
+.stats-empty-icon {
+  font-size: 32px;
 }
 
-.avg-card strong {
-  font-size: 28px;
-  font-weight: 800;
+.stats-empty p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
 }
 
+.stats-empty-sub {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #888888 !important;
+}
+
+/* =========================
+   GARDEN BANNER
+========================= */
+.garden-banner {
+  width: 100%;
+  flex-shrink: 0;
+  user-select: none;
+  position: relative;
+  z-index: 10;
+}
+
+.garden-sky {
+  background: #c8e8f4;
+  height: 56px;
+  overflow: hidden;
+  border-bottom: 1px solid #a8cce0;
+}
+
+.garden-ground {
+  position: relative;
+  background: #dff0d8;
+}
+
+.garden-grass-bg {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: #72c040;
+  opacity: 0.35;
+}
+
+.garden-plants {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px 0 0 0;
+  max-width: 352px;
+  margin: 0 auto;
+}
+
+.garden-soil {
+  height: 40px;
+  background: #8B5E3C;
+  position: relative;
+  width: 100%;
+}
+
+.garden-soil-dark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: #7a4f2e;
+}
 
 /* =========================
    GAME AREA
 ========================= */
 .game {
-  min-height: 100vh;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 60px;
+  padding-top: 24px;
   gap: 10px;
+  background: #ffffff;
 }
 
+.game h1 {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #6aaa4a;
+  margin: 0;
+  opacity: 0.8;
+}
 
 /* =========================
-   HIDDEN INPUT (MOBILE KB)
+   HIDDEN INPUT
 ========================= */
 .hidden-input {
   position: absolute;
@@ -214,33 +291,16 @@ body {
 }
 
 @keyframes shake {
-  0% {
-    transform: translateX(0);
-  }
-
-  20% {
-    transform: translateX(-6px);
-  }
-
-  40% {
-    transform: translateX(6px);
-  }
-
-  60% {
-    transform: translateX(-6px);
-  }
-
-  80% {
-    transform: translateX(6px);
-  }
-
-  100% {
-    transform: translateX(0);
-  }
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-6px); }
+  40%  { transform: translateX(6px); }
+  60%  { transform: translateX(-6px); }
+  80%  { transform: translateX(6px); }
+  100% { transform: translateX(0); }
 }
 
 /* =========================
-   TOAST FEEDBACK
+   TOAST
 ========================= */
 .toast {
   position: fixed;
@@ -253,36 +313,24 @@ body {
   color: white;
   z-index: 2000;
   animation: slideDown 0.25s ease-out;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-.toast.success {
-  background: var(--success);
-}
-
-.toast.error {
-  background: var(--error);
-}
+.toast.success { background: var(--success); }
+.toast.error   { background: var(--error); }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
+  from { opacity: 0; transform: translate(-50%, -12px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
 }
 
 /* =========================
-   MODAL (WIN / LOSS)
+   MODAL
 ========================= */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -290,33 +338,38 @@ body {
 }
 
 .modal {
-  background: var(--panel);
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
   padding: 24px;
   border-radius: 14px;
   text-align: center;
   min-width: 300px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
-.modal h2 {
-  margin-bottom: 8px;
-}
-
-.modal p {
-  color: var(--muted);
-}
+.modal h2 { color: #1a1a1a; margin-bottom: 8px; }
+.modal p  { color: #666666; }
+.modal strong { color: #1a1a1a; }
 
 .modal button {
   margin-top: 16px;
-  padding: 10px 18px;
+  padding: 10px 24px;
   border-radius: 8px;
-  border: none;
+  border: 1.5px solid #1a1a1a;
+  background: #ffffff;
+  color: #1a1a1a;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.modal button:hover {
+  background: #1a1a1a;
+  color: #ffffff;
 }
 
 /* =========================
-   START SCREEN (LIGHT)
+   START SCREEN
 ========================= */
 .start-screen {
   height: 100vh;
@@ -350,31 +403,9 @@ body {
   color: #fff;
 }
 
-
 /* =========================
-   MOBILE
+   DEBUG TOGGLE
 ========================= */
-@media (max-width: 768px) {
-  .app-root {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    order: 2;
-    border-right: none;
-    border-top: 1px solid var(--border);
-  }
-
-  .game {
-    order: 1;
-    padding: 16px;
-  }
-}
-
-/* =========================
-   Debug toggle
-========================= */
-
 .target-toggle {
   position: fixed;
   top: 16px;
@@ -387,32 +418,27 @@ body {
   top: 16px;
   right: 16px;
   z-index: 1200;
-
-  background: var(--panel);
-  border: 1px solid var(--border);
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
   border-radius: 10px;
-
   padding: 10px 14px;
   min-width: 48px;
-
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 3px;
-  color: var(--text);
-
+  color: #1a1a1a;
   cursor: pointer;
 }
-
 
 .target-toggle-word {
   margin-top: 6px;
   padding: 6px 10px;
-  background: #000;
-  border: 1px solid var(--border);
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
   border-radius: 8px;
   font-size: 14px;
   letter-spacing: 3px;
-  color: var(--muted);
+  color: #444444;
 }
 
 /* =========================
@@ -435,8 +461,8 @@ body {
   width: 38px;
   height: 52px;
   border-radius: 6px;
-  background: #818384;
-  color: #fff;
+  background: #d3d6da;
+  color: #1a1a1a;
   font-size: 13px;
   font-weight: 700;
   display: flex;
@@ -446,283 +472,15 @@ body {
   user-select: none;
 }
 
-.keyboard-key.correct  { background: var(--tile-correct); }
-.keyboard-key.present  { background: var(--tile-present); }
-.keyboard-key.absent   { background: var(--tile-absent);  }
-
-/* =========================
-   GARDEN BANNER — full width
-   Add these to App.css
-========================= */
-
-/* Override app-root so garden sits at the very top */
-.app-root {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--bg);
-}
-
-/* The garden banner stretches edge to edge */
-.garden-banner {
-  width: 100%;
-  flex-shrink: 0;
-  user-select: none;
-  position: relative;
-  z-index: 10;
-}
-
-/* Sky */
-.garden-sky {
-  background: #c8e8f4;
-  height: 56px;
-  overflow: hidden;
-  border-bottom: 1px solid #a8cce0;
-}
-
-/* Ground area — contains plants + soil */
-.garden-ground {
-  position: relative;
-  background: #dff0d8;
-}
-
-/* Subtle grass strip just above soil */
-.garden-grass-bg {
-  position: absolute;
-  bottom: 40px;
-  left: 0;
-  right: 0;
-  height: 8px;
-  background: #72c040;
-  opacity: 0.35;
-}
-
-/* Plants row — centered, matching grid width */
-.garden-plants {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 8px;
-  padding: 12px 0 0 0;
-  /* nudge plants to align with the 5 grid columns below */
-  /* 5 tiles × 64px + 4 gaps × 8px = 352px total grid width */
-  max-width: 352px;
-  margin: 0 auto;
-}
-
-/* Soil — full width, hard edge */
-.garden-soil {
-  height: 40px;
-  background: #8B5E3C;
-  margin-top: 0;
-  position: relative;
-  width: 100%;
-}
-
-.garden-soil-dark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 12px;
-  background: #7a4f2e;
-}
-
-
-/* =========================
-   GAME AREA — below garden
-========================= */
-
-/* Game sits below the banner, white/neutral bg */
-.game {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: 24px;   /* reduced — garden takes top space */
-  gap: 10px;
-  background: var(--bg);
-}
-
-/* h1 styling — smaller, sits right below soil */
-.game h1 {
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: #6aaa4a;
-  margin: 0;
-  opacity: 0.8;
-}
-
+.keyboard-key.correct { background: var(--tile-correct); color: #ffffff; }
+.keyboard-key.present { background: var(--tile-present); color: #ffffff; }
+.keyboard-key.absent  { background: #9a9a9a;             color: #ffffff; }
 
 /* =========================
    MOBILE
 ========================= */
 @media (max-width: 480px) {
-  .garden-sky {
-    height: 40px;
-  }
-
-  .garden-plants {
-    gap: 4px;
-    max-width: 296px; /* 5 × 52px + 4 × 8px on mobile */
-  }
-
-  .game {
-    padding-top: 16px;
-    gap: 8px;
-  }
-}
-
-
-/* =========================
-   Diese Blöcke in App.css
-   ersetzen / hinzufügen
-========================= */
-
-
-/* SIDEBAR & STATS
-   ----------------------- */
-.sidebar {
-  background: #f9f9f9;
-  border-right: 1px solid #e0e0e0;
-}
-
-.stats-button {
-  background: #f0f0f0;
-  border: 1px solid #d0d0d0;
-  border-radius: 10px;
-  padding: 10px 12px;
-  cursor: pointer;
-  font-size: 18px;
-  z-index: 1100;
-  position: fixed;
-  top: 16px;
-  left: 16px;
-}
-
-.stats h2 {
-  color: #1a1a1a;
-}
-
-.avg-card {
-  background: #f0f0f0;
-  border-radius: 14px;
-  padding: 16px;
-  text-align: center;
-}
-
-.avg-card span {
-  display: block;
-  font-size: 13px;
-  color: #666666;
-  margin-bottom: 6px;
-}
-
-.avg-card strong {
-  font-size: 28px;
-  font-weight: 800;
-  color: #1a1a1a;
-}
-
-.bar {
-  background: #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
-  height: 28px;
-}
-
-.bar-fill {
-  background: #6aaa64;
-  height: 100%;
-  padding-left: 10px;
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.bar-row span {
-  color: #1a1a1a;
-}
-
-.distribution span {
-  color: #1a1a1a;
-}
-
-
-/* MODAL (WIN / LOSS)
-   ----------------------- */
-.modal {
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  padding: 24px;
-  border-radius: 14px;
-  text-align: center;
-  min-width: 300px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-}
-
-.modal h2 {
-  color: #1a1a1a;
-  margin-bottom: 8px;
-}
-
-.modal p {
-  color: #666666;
-}
-
-.modal strong {
-  color: #1a1a1a;
-}
-
-.modal button {
-  margin-top: 16px;
-  padding: 10px 24px;
-  border-radius: 8px;
-  border: 1.5px solid #1a1a1a;
-  background: #ffffff;
-  color: #1a1a1a;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.modal button:hover {
-  background: #1a1a1a;
-  color: #ffffff;
-}
-
-
-/* DEBUG TOGGLE (TargetToggle)
-   ----------------------- */
-.target-toggle-btn {
-  background: #f0f0f0;
-  border: 1px solid #d0d0d0;
-  border-radius: 10px;
-  padding: 10px 14px;
-  min-width: 48px;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  color: #1a1a1a;
-  cursor: pointer;
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 1200;
-}
-
-.target-toggle-word {
-  margin-top: 6px;
-  padding: 6px 10px;
-  background: #f0f0f0;
-  border: 1px solid #d0d0d0;
-  border-radius: 8px;
-  font-size: 14px;
-  letter-spacing: 3px;
-  color: #444444;
+  .garden-sky    { height: 40px; }
+  .garden-plants { gap: 4px; max-width: 296px; }
+  .game          { padding-top: 16px; gap: 8px; }
 }

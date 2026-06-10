@@ -1,16 +1,20 @@
 function Tile({ letter, status }) {
-  let backgroundColor = '#3a3a3c'; // leer
-  let borderColor = '#3a3a3c';
+  let backgroundColor = '#ffffff';
+  let borderColor = '#d3d6da';
+  let color = '#1a1a1a';
 
   if (status === 'correct') {
-    backgroundColor = '#538d4e';
-    borderColor = '#538d4e';
+    backgroundColor = '#6aaa64';
+    borderColor = '#6aaa64';
+    color = '#ffffff';
   } else if (status === 'present') {
-    backgroundColor = '#b59f3b';
-    borderColor = '#b59f3b';
+    backgroundColor = '#c9b458';
+    borderColor = '#c9b458';
+    color = '#ffffff';
   } else if (status === 'absent') {
-    backgroundColor = '#1f1f1f'; // dunkler als leer
-    borderColor = '#1f1f1f';
+    backgroundColor = '#787c7e';
+    borderColor = '#787c7e';
+    color = '#ffffff';
   }
 
   return (
@@ -24,7 +28,7 @@ function Tile({ letter, status }) {
         justifyContent: 'center',
         fontSize: '32px',
         fontWeight: 'bold',
-        color: 'white',
+        color: color,
         backgroundColor: backgroundColor,
         margin: '2px',
         textTransform: 'uppercase',

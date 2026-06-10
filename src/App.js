@@ -133,10 +133,9 @@ function App() {
     return word;
   }
 
-  async function getHistory() {
-
-    // last 5 games
-    const { data: last5Raw = [] } = await supabase
+ async function getHistory() {
+  try {
+    const { data: last5Raw } = await supabase
       .from("games")
       .select("guesses")
       .neq("guesses", 7)
@@ -150,38 +149,34 @@ function App() {
         ? last5.reduce((sum, g) => sum + g.guesses, 0) / last5.length
         : 0;
 
-    // overall
-    const { data: allWinsRaw = [] } = await supabase
+    const { data: allWinsRaw } = await supabase
       .from("games")
       .select("guesses")
       .neq("guesses", 7);
 
     const allWins = allWinsRaw ?? [];
-    
+
     const overallAvg =
       allWins.length > 0
         ? allWins.reduce((sum, g) => sum + g.guesses, 0) / allWins.length
         : 0;
 
-    // Häufigkeitsverteilung (nur gewonnene)
     const distribution = allWins.reduce((acc, g) => {
       acc[g.guesses] = (acc[g.guesses] || 0) + 1;
       return acc;
     }, {});
 
-    // Anzahl verlorene Spiele
-    const { count: lostGames = 0 } = await supabase
+    const { count: lostGames } = await supabase
       .from("games")
       .select("*", { count: "exact", head: true })
-      .eq("guesses", 7) ?? [];
+      .eq("guesses", 7);
 
-    return {
-      avgLast5,
-      overallAvg,
-      distribution,
-      lostGames
-    };
+    return { avgLast5, overallAvg, distribution, lostGames: lostGames ?? 0 };
+
+  } catch (e) {
+    return { avgLast5: 0, overallAvg: 0, distribution: {}, lostGames: 0 };
   }
+}
 
 
 
@@ -297,7 +292,7 @@ function App() {
       )}
 
       <aside className={`sidebar ${statsOpen ? "open" : ""}`}>
-        {stats && <Stats stats={stats} />}
+        <Stats stats={stats} />
       </aside>
 
 
