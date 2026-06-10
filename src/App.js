@@ -9,7 +9,7 @@ import Toast from "./components/Toast";
 import GameResultModal from './components/GameResultModal';
 import StartScreen from './components/StartScreen';
 import Keyboard from './components/Keyboard';
-
+import GardenScene from './components/GardenScene';
 
 function App() {
 
@@ -307,11 +307,11 @@ function App() {
       )}
 
       {/* CENTER: Game */}
+
+      <GardenScene guesses={guesses} />
+
       <main className="game">
-        <Toast feedback={feedback} clear={() => setFeedback(null)} />
-
-
-        <h1>Wordle</h1>
+        <Toast feedback={feedback} clear={() => setFeedback(null)} />  
 
         <TargetToggle targetWord={targetWord} />
 

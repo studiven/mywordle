@@ -1,15 +1,18 @@
 /* =========================
    THEME
 ========================= */
-:root {
-  --bg: #121213;
-  --panel: #1e1e1e;
-  --border: #333;
 
-  --tile-empty: #3a3a3c;
-  --tile-absent: #3a3a3c;
-  --tile-present: #b59f3b;
-  --tile-correct: #538d4e;
+:root {
+  --bg: #ffffff;           
+  --panel: #f5f5f5;        
+  --border: #e0e0e0;       
+  --muted: #888888;        
+  --text: #1a1a1a;         
+
+  --tile-empty: #d3d6da;
+  --tile-absent: #d3d6da;
+  --tile-present: #c9b458;
+  --tile-correct: #6aaa64;
 
   --success: #538d4e;
   --error: #b91c1c;
@@ -182,8 +185,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 80px;
-  gap: 16px;
+  padding-top: 60px;
+  gap: 10px;
 }
 
 
@@ -446,3 +449,280 @@ body {
 .keyboard-key.correct  { background: var(--tile-correct); }
 .keyboard-key.present  { background: var(--tile-present); }
 .keyboard-key.absent   { background: var(--tile-absent);  }
+
+/* =========================
+   GARDEN BANNER — full width
+   Add these to App.css
+========================= */
+
+/* Override app-root so garden sits at the very top */
+.app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* The garden banner stretches edge to edge */
+.garden-banner {
+  width: 100%;
+  flex-shrink: 0;
+  user-select: none;
+  position: relative;
+  z-index: 10;
+}
+
+/* Sky */
+.garden-sky {
+  background: #c8e8f4;
+  height: 56px;
+  overflow: hidden;
+  border-bottom: 1px solid #a8cce0;
+}
+
+/* Ground area — contains plants + soil */
+.garden-ground {
+  position: relative;
+  background: #dff0d8;
+}
+
+/* Subtle grass strip just above soil */
+.garden-grass-bg {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: #72c040;
+  opacity: 0.35;
+}
+
+/* Plants row — centered, matching grid width */
+.garden-plants {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px 0 0 0;
+  /* nudge plants to align with the 5 grid columns below */
+  /* 5 tiles × 64px + 4 gaps × 8px = 352px total grid width */
+  max-width: 352px;
+  margin: 0 auto;
+}
+
+/* Soil — full width, hard edge */
+.garden-soil {
+  height: 40px;
+  background: #8B5E3C;
+  margin-top: 0;
+  position: relative;
+  width: 100%;
+}
+
+.garden-soil-dark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: #7a4f2e;
+}
+
+
+/* =========================
+   GAME AREA — below garden
+========================= */
+
+/* Game sits below the banner, white/neutral bg */
+.game {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 24px;   /* reduced — garden takes top space */
+  gap: 10px;
+  background: var(--bg);
+}
+
+/* h1 styling — smaller, sits right below soil */
+.game h1 {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #6aaa4a;
+  margin: 0;
+  opacity: 0.8;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 480px) {
+  .garden-sky {
+    height: 40px;
+  }
+
+  .garden-plants {
+    gap: 4px;
+    max-width: 296px; /* 5 × 52px + 4 × 8px on mobile */
+  }
+
+  .game {
+    padding-top: 16px;
+    gap: 8px;
+  }
+}
+
+
+/* =========================
+   Diese Blöcke in App.css
+   ersetzen / hinzufügen
+========================= */
+
+
+/* SIDEBAR & STATS
+   ----------------------- */
+.sidebar {
+  background: #f9f9f9;
+  border-right: 1px solid #e0e0e0;
+}
+
+.stats-button {
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 18px;
+  z-index: 1100;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+}
+
+.stats h2 {
+  color: #1a1a1a;
+}
+
+.avg-card {
+  background: #f0f0f0;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+
+.avg-card span {
+  display: block;
+  font-size: 13px;
+  color: #666666;
+  margin-bottom: 6px;
+}
+
+.avg-card strong {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.bar {
+  background: #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 28px;
+}
+
+.bar-fill {
+  background: #6aaa64;
+  height: 100%;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.bar-row span {
+  color: #1a1a1a;
+}
+
+.distribution span {
+  color: #1a1a1a;
+}
+
+
+/* MODAL (WIN / LOSS)
+   ----------------------- */
+.modal {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+  border-radius: 14px;
+  text-align: center;
+  min-width: 300px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.modal h2 {
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.modal p {
+  color: #666666;
+}
+
+.modal strong {
+  color: #1a1a1a;
+}
+
+.modal button {
+  margin-top: 16px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: 1.5px solid #1a1a1a;
+  background: #ffffff;
+  color: #1a1a1a;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.modal button:hover {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+
+/* DEBUG TOGGLE (TargetToggle)
+   ----------------------- */
+.target-toggle-btn {
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  min-width: 48px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #1a1a1a;
+  cursor: pointer;
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1200;
+}
+
+.target-toggle-word {
+  margin-top: 6px;
+  padding: 6px 10px;
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: #444444;
+}
