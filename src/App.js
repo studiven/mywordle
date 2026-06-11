@@ -54,11 +54,6 @@ function App() {
     return <StartScreen onSelect={setGameMode} />;
   }
 
-  function handleLanguageChange(code) {
-    setLanguage(code);
-    localStorage.setItem('wordle-language', code);
-  }
-
   function triggerShake() {
     setShake(true);
     setTimeout(() => setShake(false), 400);
