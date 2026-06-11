@@ -10,6 +10,7 @@ import GameResultModal from './components/GameResultModal';
 import StartScreen from './components/StartScreen';
 import Keyboard from './components/Keyboard';
 import GardenScene from './components/GardenScene';
+import MenuBar from './components/MenuBar';
 
 function App() {
 
@@ -26,6 +27,9 @@ function App() {
   const [shake, setShake] = useState(false);
   const [gameMode, setGameMode] = useState(null);
   const [statsOpen, setStatsOpen] = useState(false);
+  const [language, setLanguage] = useState(
+  () => localStorage.getItem('wordle-language') || 'en'
+);
 
 
   useEffect(() => {
@@ -50,36 +54,67 @@ function App() {
     return <StartScreen onSelect={setGameMode} />;
   }
 
+  function handleLanguageChange(code) {
+    setLanguage(code);
+    localStorage.setItem('wordle-language', code);
+  }
+
   function triggerShake() {
     setShake(true);
     setTimeout(() => setShake(false), 400);
   }
 
-  async function getDailyWord() {
+  async function getDailyWord(langOverride) {
+    const lang = langOverride || language;
     const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
     const { data } = await supabase
       .from("daily_words")
       .select("word")
       .eq("date", today)
+      .eq("lang", lang)
       .single();
 
     if (data?.word) {
       return data.word.toUpperCase();
     }
 
-    const word = await loadValidTargetWord();
+    const word = await loadValidTargetWord(lang);
 
     await supabase.from("daily_words").insert({
       date: today,
-      word: word.toUpperCase()
+      word: word.toUpperCase(),
+      lang: lang
     });
 
     return word;
   }
 
+  function handleLanguageChange(code) {
+    setLanguage(code);
+    localStorage.setItem('wordle-language', code);
+ 
+    // Spielstand zurücksetzen, da das aktuelle Wort in der alten Sprache ist
+    setGuesses([]);
+    setCurrentGuess('');
+    setGameStatus('playing');
+ 
+    if (gameMode === 'daily') {
+    // Bei daily: neues Tageswort für die neue Sprache laden
+    // (loadValidTargetWord nutzt automatisch den aktuellen `language`-State,
+    //  WICHTIG: language-State wird async erst beim nächsten Render aktuell sein —
+    //  daher `code` direkt als Parameter durchreichen, siehe Hinweis unten)
+      getDailyWord(code).then(word => {
+      setTargetWord(word.toUpperCase());
+      });
+    } else if (gameMode === 'unlimited') {
+      loadValidTargetWord(code);
+    }
+  }
 
-  async function loadValidTargetWord() {
+
+  async function loadValidTargetWord(langOverride) {
+    const lang = langOverride || language;
     setIsLoadingTarget(true);
 
     let found = false;
@@ -90,7 +125,7 @@ function App() {
     while (!found && currentTries < retries) {
       try {
         const randomRes = await fetch(
-          'https://random-words-api.kushcreates.com/api?language=en&category=wordle&length=5&type=uppercase&words=1'
+          `https://random-words-api.kushcreates.com/api?language=${lang}&category=wordle&length=5&type=uppercase&words=1`
         );
 
         if (!randomRes.ok) {
@@ -101,7 +136,7 @@ function App() {
         word = result.word;
 
         const dictRes = await fetch(
-          `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+        `https://api.dictionaryapi.dev/api/v2/entries/${lang}/${word}`
         );
 
         if (!dictRes.ok) {
@@ -295,11 +330,13 @@ function App() {
         <Stats stats={stats} />
       </aside>
 
-
-      {/* LEFT: Stats Button */}
-      {!statsOpen && (
-        <button className="stats-button" onClick={() => setStatsOpen(true)}>📊</button>
-      )}
+      {!statsOpen && (<MenuBar
+       onBack={backToStart}
+       onStats={() => setStatsOpen(true)}
+       language={language}
+       onLanguageChange={handleLanguageChange}
+      />)}
+       
 
       {/* CENTER: Game */}
 

@@ -68,19 +68,6 @@ body {
   z-index: 900;
 }
 
-.stats-button {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  background: #f0f0f0;
-  border: 1px solid #d0d0d0;
-  border-radius: 10px;
-  padding: 10px 12px;
-  cursor: pointer;
-  font-size: 18px;
-  z-index: 1100;
-}
-
 .stats h2 {
   color: #1a1a1a;
   margin-bottom: 16px;
@@ -483,4 +470,73 @@ body {
   .garden-sky    { height: 40px; }
   .garden-plants { gap: 4px; max-width: 296px; }
   .game          { padding-top: 16px; gap: 8px; }
+}
+
+/* =========================
+   MENU BAR (top-left)
+========================= */
+.menu-bar {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-back-btn {
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1;
+}
+
+.menu-back-btn:hover {
+  background: #e5e5e5;
+}
+
+.menu-flags {
+  display: flex;
+  gap: 4px;
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.menu-flag-btn {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.5;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.menu-flag-btn:hover {
+  opacity: 0.8;
+  background: #e5e5e5;
+}
+
+.menu-flag-btn.active {
+  opacity: 1;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+/* On mobile, allow wrapping so it doesn't overflow */
+@media (max-width: 480px) {
+  .menu-bar {
+    flex-wrap: wrap;
+    max-width: calc(100vw - 32px);
+  }
 }
