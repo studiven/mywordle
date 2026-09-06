@@ -201,11 +201,28 @@ function App() {
   }
 
   async function isValidDictionaryWord(word) {
-    const res = await fetch(
+    
+    try {
+       const res = await fetch(
       `https://api.dictionaryapi.dev/api/v2/entries/${languageRef.current}/${word.toLowerCase()}`
-    );
-    const data = await res.json();
-    return Array.isArray(data) && data.length > 0;
+      );
+
+      if (res.status === 404) {
+      return false;
+      }
+
+      if (!res.ok) {
+        console.warn(`Dictionary API returned ${res.status}, allowing guess through`);
+        return true;
+      }
+
+      const data = await res.json();
+      return Array.isArray(data) && data.length > 0;
+
+    } catch (error) {
+      console.warn('Dictionary API unreachable, allowing guess through:', error);
+      return true;
+    }
   }
 
   function resetGame() {

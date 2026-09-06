@@ -23,15 +23,19 @@ export function checkGuess(guess, targetWord) {
                     }
 
                     if (found) {
-
+                        //handle double letters in guess
                         if (((guess.match(new RegExp(guess[i],"g")) || []).length) >= 2) {
                             let matched = false; 
                             for(let k = 0; k < guess.length; k++) {
-
-                            if ((guess[i] === guess[k] && i !== k && i > k) || (i <= k && guess[k] === guess[i] && guess[k] === targetWord[k])) {
-                                result.push('absent');  
-                                matched = true; 
+                            
+                            //checkt for doule letters in targetword
+                            if (!(((targetWord.match(new RegExp(guess[i],"g")) || []).length) >= 2)) {
+                                if ((guess[i] === guess[k] && i !== k && i > k) || (i <= k && guess[k] === guess[i] && guess[k] === targetWord[k])) {
+                                    result.push('absent');  
+                                    matched = true; 
+                                }
                             }
+                            
                             }
                             if (!matched) {
                                 result.push('present')
