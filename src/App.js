@@ -64,13 +64,13 @@ function App() {
     setTimeout(() => setShake(false), 400);
   }
 
-  // lang immer explizit als Parameter — nie aus State/Closure
+
   async function loadValidTargetWord(lang) {
     setIsLoadingTarget(true);
 
     let found = false;
     let word = null;
-    let retries = 5;
+    let retries = 2;
     let currentTries = 0;
 
     while (!found && currentTries < retries) {
@@ -252,14 +252,15 @@ function App() {
         return;
       }
 
-      const valid = await isValidDictionaryWord(currentGuess);
+      //const valid = await isValidDictionaryWord(currentGuess);
+      const valid = true; 
       if (!valid) {
         setFeedback({ type: 'error', message: 'Ungültiges Wort' });
         triggerShake();
         return;
       }
 
-      setFeedback({ type: 'success', message: '✓ Wort akzeptiert' });
+      setFeedback({ type: 'success', message: 'Wort akzeptiert' });
 
       setGuesses(g => [
         ...g,

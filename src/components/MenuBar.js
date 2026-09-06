@@ -1,8 +1,8 @@
 const LANGUAGES = [
-  { code: 'de', flag: '🇩🇪', label: 'Deutsch' },
+//  { code: 'de', flag: '🇩🇪', label: 'Deutsch' },
   { code: 'en', flag: '🇬🇧', label: 'English' },
-  { code: 'fr', flag: '🇫🇷', label: 'Français' },
-  { code: 'it', flag: '🇮🇹', label: 'Italiano' },
+//  { code: 'fr', flag: '🇫🇷', label: 'Français' },
+//  { code: 'it', flag: '🇮🇹', label: 'Italiano' }
 ];
 
 export default function MenuBar({ onBack, onStats, language, onLanguageChange }) {

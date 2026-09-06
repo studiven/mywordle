@@ -1,5 +1,3 @@
-
-
 export function checkGuess(guess, targetWord) {
     guess = guess.toUpperCase();
     targetWord = targetWord.toUpperCase();
@@ -23,19 +21,18 @@ export function checkGuess(guess, targetWord) {
                     }
 
                     if (found) {
-                        //handle double letters in guess
+                        //mark first apperence yellow and others gray
                         if (((guess.match(new RegExp(guess[i],"g")) || []).length) >= 2) {
                             let matched = false; 
                             for(let k = 0; k < guess.length; k++) {
-                            
-                            //checkt for doule letters in targetword
+
+                            //check for double letters in targetword
                             if (!(((targetWord.match(new RegExp(guess[i],"g")) || []).length) >= 2)) {
                                 if ((guess[i] === guess[k] && i !== k && i > k) || (i <= k && guess[k] === guess[i] && guess[k] === targetWord[k])) {
                                     result.push('absent');  
                                     matched = true; 
                                 }
                             }
-                            
                             }
                             if (!matched) {
                                 result.push('present')

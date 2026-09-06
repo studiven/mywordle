@@ -54,6 +54,8 @@ export default function PlantTile({ status, letter, prevStatus }) {
   );
 }
 
+//MIT HILFE von KI
+
 function FlowerPlant() {
   return (
     <>
