@@ -43,6 +43,8 @@ export default function GardenScene({ guesses }) {
   const prevBest = prevBestRef.current;
 
   return (
+
+    //MIT HILFE von KI
     <div className="garden-banner">
 
       {/* Sky — full width */}

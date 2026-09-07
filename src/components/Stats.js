@@ -7,6 +7,7 @@ export default function Stats({ stats }) {
       Object.keys(stats.distribution).length === 0);
 
   if (isEmpty) {
+    //MIT HILFE von KI
     return (
       <div className="stats">
         <h2>Statistik</h2>
