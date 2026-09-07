@@ -83,8 +83,8 @@ function App() {
 
         const [result] = await randomRes.json();
         word = result.word;
-
-        const dictRes = await fetch(
+        found = true; 
+        /*const dictRes = await fetch(
           `https://api.dictionaryapi.dev/api/v2/entries/${lang}/${word}`
         );
 
@@ -94,6 +94,7 @@ function App() {
         if (Array.isArray(dictData) && dictData.length > 0) {
           found = true;
         }
+        */
 
       } catch (error) {
         console.error('API error:', error);
